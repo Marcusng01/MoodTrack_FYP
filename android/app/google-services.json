@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "307929323963",
+    "project_id": "ai-mood-tracking-app",
+    "storage_bucket": "ai-mood-tracking-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307929323963:android:521038d0f15622d59c8c9e",
+        "android_client_info": {
+          "package_name": "com.example.ai_mood_tracking_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTaP81iJDv2LyamGMafXG-v3HkmbwbhKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
