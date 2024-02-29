@@ -1,15 +1,15 @@
-import 'package:ai_mood_tracking_application/UI/authentication/register.dart';
-import 'package:ai_mood_tracking_application/UI/authentication/register_success_screen.dart';
-import 'package:ai_mood_tracking_application/UI/authentication/select_user_type.dart';
-import 'package:ai_mood_tracking_application/UI/student/journaling/result_screen.dart';
-import 'package:ai_mood_tracking_application/UI/student/journaling/student_journaling_screen.dart';
-import 'package:ai_mood_tracking_application/UI/student/journaling/writing_screen.dart';
-import 'package:ai_mood_tracking_application/UI/student/reflect/student_reflect_screen.dart';
-import 'package:ai_mood_tracking_application/UI/student/reflect/student_reminders_screen.dart';
-import 'package:ai_mood_tracking_application/UI/student/student_analyse_screen.dart';
-import 'package:ai_mood_tracking_application/UI/student/student_dashboard.dart';
-import 'package:ai_mood_tracking_application/UI/student/student_message_screen.dart';
-import 'package:ai_mood_tracking_application/logic/auth/auth_gate.dart';
+import 'package:ai_mood_tracking_application/ui/authentication/auth_gate.dart';
+import 'package:ai_mood_tracking_application/ui/authentication/register/register_view.dart';
+import 'package:ai_mood_tracking_application/ui/authentication/register_success/register_success_view.dart';
+import 'package:ai_mood_tracking_application/ui/authentication/select_user_type/select_user_type_view.dart';
+import 'package:ai_mood_tracking_application/ui/student/analyse/analyse_view.dart';
+import 'package:ai_mood_tracking_application/ui/student/dashboard/student_dashboard.dart';
+import 'package:ai_mood_tracking_application/ui/student/journaling/journal_calendar/journal_calendar_view.dart';
+import 'package:ai_mood_tracking_application/ui/student/journaling/journal_reflect/journal_reflect_view.dart';
+import 'package:ai_mood_tracking_application/ui/student/journaling/journal_result/journal_result_view.dart';
+import 'package:ai_mood_tracking_application/ui/student/journaling/journal_writing/journal_writing_view.dart';
+import 'package:ai_mood_tracking_application/ui/student/message/message_view.dart';
+import 'package:ai_mood_tracking_application/ui/student/reminders/reminders_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -44,20 +44,21 @@ class MyApp extends StatelessWidget {
         "/selectUserType": (context) =>
             const SelectUserType(title: "Select User Type"),
         "/selectUserType/Register": (context) =>
-            const Register(title: "Register"),
+            const RegisterView(title: "Register"),
         "/selectUserType/Register/Success": (context) =>
-            const RegisterSuccessScreen(title: "Registered Successfully!"),
+            const RegisterSuccessView(title: "Registered Successfully!"),
         "/Student/Dashboard": (context) => StudentDashboard(title: "Dashboard"),
         "/Student/Journaling": (context) =>
-            StudentJournalingScreen(title: "Journal"),
-        "/Student/Journaling/Writing": (context) => WritingScreen(),
-        "/Student/Journaling/Result": (context) => ResultScreen(),
+            JournalCalendarView(title: "Journal"),
+        "/Student/Journaling/Reflect": (context) =>
+            JournalReflectView(title: "Reflect"),
+        "/Student/Journaling/Writing": (context) => JournalWritingView(),
+        "/Student/Journaling/Result": (context) => JournalResultView(),
         "/Student/Reminders": (context) =>
-            StudentRemindersScreen(title: "Reminders of Past Reflections"),
+            RemindersView(title: "Reminders of Past Reflections"),
         "/Student/Message Counsellor": (context) =>
-            StudentMessageScreen(title: "Message"),
-        "/Student/Analyse": (context) => StudentAnalyseScreen(title: "Analyse"),
-        "/Student/Reflect": (context) => StudentReflectScreen(title: "Reflect"),
+            MessageView(title: "Message"),
+        "/Student/Analyse": (context) => AnalyseView(title: "Analyse"),
       },
       // onGenerateRoute: (settings) {
       //   if (settings.name == '/Student/Journaling/Writing') {

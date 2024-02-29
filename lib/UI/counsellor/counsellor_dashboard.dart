@@ -1,4 +1,4 @@
-import 'package:ai_mood_tracking_application/logic/auth/auth.dart';
+import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
 import 'package:ai_mood_tracking_application/styles/text_styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 class CounsellorDashboard extends StatefulWidget {
   CounsellorDashboard({super.key, required this.title});
   final String title;
-  final User? user = Auth().currentUser;
+  final User? user = AuthService().currentUser;
   Future<void> signOut() async {
-    await Auth().signOut();
+    await AuthService().signOut();
   }
 
   @override
@@ -81,7 +81,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
       body: counsellorStudentList(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Auth().signOut();
+          AuthService().signOut();
         },
         label: const Text("Sign Out"),
       ),
