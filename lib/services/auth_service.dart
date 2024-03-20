@@ -55,7 +55,7 @@ class AuthService {
       return dict;
     } else if (!isCounsellor) {
       try {
-        await correspondingCounsellor(counselorCode.text);
+        await searchCounsellorDoc(counselorCode.text);
       } catch (e) {
         dict['error'] = "Couldn't find counsellor.";
         return dict;
@@ -84,6 +84,7 @@ class AuthService {
         'username': username.text,
         'isCounsellor': isCounsellor,
         'counselorCode': counselorCodeHash,
+        'id': userCredential.user!.uid,
       });
       dict['hash'] = counselorCodeHash;
       return dict;
@@ -97,7 +98,7 @@ class AuthService {
     await _firebaseAuth.signOut();
   }
 
-  Future<DocumentSnapshot> correspondingCounsellor(String counselorCode) async {
+  Future<DocumentSnapshot> searchCounsellorDoc(String counselorCode) async {
     QuerySnapshot querySnapshot = await _firebaseFirestore
         .collection('/users')
         .where('counselorCode', isEqualTo: counselorCode)
@@ -110,6 +111,37 @@ class AuthService {
     }
 
     return querySnapshot.docs[0];
+  }
+
+  Future<DocumentSnapshot> currentUserCounsellorDoc() async {
+    var doc = await getUserDetails();
+    var data = doc.data()! as Map<String, dynamic>;
+    var counsellorCode = data["counsellorCode"];
+    return searchCounsellorDoc(counsellorCode);
+  }
+
+  Stream<QuerySnapshot> streamSearchCounsellorDoc(String counselorCode) {
+    return _firebaseFirestore
+        .collection('/users')
+        .where('counselorCode', isEqualTo: counselorCode)
+        .where('isCounsellor', isEqualTo: true)
+        .limit(1)
+        .snapshots();
+  }
+
+  // Stream<QuerySnapshot> streamCurrentUserCounsellorDoc() async {
+  //   var snapshot = streamUserDetails();
+  //   snapshot.first.
+  //   var data = snapshot.data()! as Map<String, dynamic>;
+  //   var counsellorCode = data["counsellorCode"];
+  //   return streamSearchCounsellorDoc(counsellorCode);
+  // }
+
+  Stream<QuerySnapshot> streamUserDetails() {
+    return _firebaseFirestore
+        .collection('users')
+        .where("id", isEqualTo: currentUser!.uid)
+        .snapshots();
   }
 
   Future<DocumentSnapshot> getUserDetails() async {

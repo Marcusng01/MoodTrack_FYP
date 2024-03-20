@@ -42,7 +42,7 @@ class _MyRegisterSuccessViewState extends State<RegisterSuccessView> {
       );
     } else {
       return FutureBuilder(
-          future: AuthService().correspondingCounsellor(counselorCode),
+          future: AuthService().searchCounsellorDoc(counselorCode),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
