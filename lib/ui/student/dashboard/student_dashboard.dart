@@ -93,7 +93,7 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
 
   Widget messageButton(userData, head, body, foot, icon) {
     return StreamBuilder(
-        stream: _auth.streamSearchCounsellorDoc(userData["counsellorCode"]),
+        stream: _auth.streamSearchCounsellorDoc(userData["counselorCode"]),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error${snapshot.error}');
@@ -101,17 +101,16 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading...");
           }
-
-          var counsellorDoc = snapshot.data!.docs.toList()[0];
-          var counsellorData = counsellorDoc.data as Map<String, dynamic>;
+          var counselorDoc = snapshot.data!.docs.toList()[0];
+          var counselorData = counselorDoc.data();
           return ElevatedButton(
             onPressed: () => {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => MessageView(
-                          receiverUsername: counsellorData["username"],
-                          receiverUserId: counsellorData["id"])))
+                          receiverUsername: counselorData["username"],
+                          receiverUserId: counselorData["id"])))
             },
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -157,8 +156,7 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading...");
           }
-          var userDoc = snapshot.data!.docs.toList()[0];
-          var userData = userDoc.data as Map<String, dynamic>;
+          Map<String, dynamic> userData = snapshot.data!.docs.first.data();
           return studentDashboardScreen(userData);
         });
   }

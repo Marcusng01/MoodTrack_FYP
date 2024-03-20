@@ -44,7 +44,7 @@ class MessageService extends ChangeNotifier {
     return _firebaseFirestore
         .collection("chat_rooms")
         .doc(chatRoomId)
-        .collection("message")
+        .collection("messages")
         .orderBy("timestamp", descending: false)
         .snapshots();
   }

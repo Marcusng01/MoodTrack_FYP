@@ -120,7 +120,8 @@ class AuthService {
     return searchCounsellorDoc(counsellorCode);
   }
 
-  Stream<QuerySnapshot> streamSearchCounsellorDoc(String counselorCode) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamSearchCounsellorDoc(
+      String counselorCode) {
     return _firebaseFirestore
         .collection('/users')
         .where('counselorCode', isEqualTo: counselorCode)
@@ -137,7 +138,7 @@ class AuthService {
   //   return streamSearchCounsellorDoc(counsellorCode);
   // }
 
-  Stream<QuerySnapshot> streamUserDetails() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamUserDetails() {
     return _firebaseFirestore
         .collection('users')
         .where("id", isEqualTo: currentUser!.uid)

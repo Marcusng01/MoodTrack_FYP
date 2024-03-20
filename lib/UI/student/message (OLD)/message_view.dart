@@ -1,3 +1,4 @@
+import 'package:ai_mood_tracking_application/commons/chat_bubble.dart';
 import 'package:ai_mood_tracking_application/commons/text_field.dart';
 import 'package:ai_mood_tracking_application/ui/student/message%20(OLD)/message_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,7 +17,7 @@ class MessageView extends StatefulWidget {
 }
 
 class _MyMessageViewState extends State<MessageView> {
-  MessageController _controller = MessageController();
+  final MessageController _controller = MessageController();
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +61,21 @@ class _MyMessageViewState extends State<MessageView> {
 
     return Container(
         alignment: alignment,
-        child: Column(
-          children: [
-            Text(data['senderEmail']),
-            Text(data['message']),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment:
+                (data['senderId'] == _controller.auth.currentUser!.uid)
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+            mainAxisAlignment:
+                (data['senderId'] == _controller.auth.currentUser!.uid)
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.start,
+            children: [
+              ChatBubble(message: data['message']),
+            ],
+          ),
         ));
   }
 
