@@ -1,7 +1,9 @@
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
+import 'package:ai_mood_tracking_application/services/message_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
 import 'package:ai_mood_tracking_application/styles/text_styles.dart';
+import 'package:ai_mood_tracking_application/ui/student/message%20(OLD)/message_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +24,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
   static const TextStyle optionStyle = AppTextStyles.smallBlackText;
   final FirestoreService _firestoreService = FirestoreService();
   final AuthService _auth = AuthService();
-
+  final MessageService _messageService = MessageService();
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -135,7 +137,12 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
     String username = studentData['username'];
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, '/Student/Message Counsellor');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MessageView(
+                      receiverUsername: studentData["username"],
+                      receiverUserId: studentData["id"])));
         },
         child: Card(
           child: ListTile(
@@ -144,11 +151,41 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
               username,
               style: AppTextStyles.largeBlackText,
             ),
-            subtitle: const Text("You: Last Message",
-                style: AppTextStyles.mediumGreyText,
-                overflow: TextOverflow.ellipsis),
+            subtitle: latestMessageContainer(counselorData, studentData),
           ),
         ));
+  }
+
+  Widget latestMessageContainer(
+      Map<String, dynamic> counselorData, Map<String, dynamic> studentData) {
+    return StreamBuilder(
+        stream: _messageService.getLatestMessage(
+            counselorData["id"], studentData["id"]),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error${snapshot.error}');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading...",
+                style: AppTextStyles.mediumGreyText,
+                overflow: TextOverflow.ellipsis);
+          }
+          try {
+            Map<String, dynamic> latestMessageDocument =
+                snapshot.data!.docs.first.data();
+            String message =
+                latestMessageDocument["senderId"] == counselorData["id"]
+                    ? "You: ${latestMessageDocument['message']}"
+                    : latestMessageDocument['message'];
+            return Text(message,
+                style: AppTextStyles.mediumGreyText,
+                overflow: TextOverflow.ellipsis);
+          } catch (e) {
+            return const Text("No Messages.",
+                style: AppTextStyles.mediumGreyText,
+                overflow: TextOverflow.ellipsis);
+          }
+        });
   }
 
   Widget counsellorBottomNavBar() {
