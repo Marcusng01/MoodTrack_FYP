@@ -172,12 +172,12 @@ class _MyJournalReflectViewState extends State<JournalReflectView> {
         borderRadius: BorderRadius.circular(10), // Set the border radius here
       ),
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           TextButton(
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
             onPressed: () {
               controller.panelController.close();
             },

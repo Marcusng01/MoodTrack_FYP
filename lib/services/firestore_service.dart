@@ -122,6 +122,14 @@ class FirestoreService {
     }
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamJournals() {
+    return _firebaseFirestore
+        .collection('users')
+        .doc(currentUser?.uid)
+        .collection('journals')
+        .snapshots();
+  }
+
   Future<DocumentSnapshot> getJournalByDate(DateTime date) async {
     var formattedDate = date.toString(); // Convert DateTime to string
     var docRef = _firebaseFirestore

@@ -1,3 +1,4 @@
+import 'package:ai_mood_tracking_application/styles/color_styles.dart';
 import 'package:ai_mood_tracking_application/ui/authentication/auth_gate.dart';
 import 'package:ai_mood_tracking_application/ui/authentication/register/register_view.dart';
 import 'package:ai_mood_tracking_application/ui/authentication/register_success/register_success_view.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'AI Mood Tracking Application',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.blueSurface),
         useMaterial3: true,
       ),
       // initialRoute: "/",

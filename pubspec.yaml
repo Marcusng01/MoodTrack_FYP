@@ -38,13 +38,14 @@ dependencies:
   firebase_auth: ^4.15.3
   crypto: ^3.0.1
   calendar_date_picker2: ^0.5.3
-  intl: ^0.18.1
+  intl: ^0.19.0
   fluttertoast: ^8.0.8
   carousel_slider: ^4.2.1
   flutter_chat_ui: ^1.6.10
   flutter_firebase_chat_core: ^1.6.7
-  syncfusion_flutter_charts: ^24.1.44+1
+  syncfusion_flutter_charts: ^25.1.35
   sliding_up_panel: ^2.0.0+1
+  syncfusion_flutter_datepicker: ^25.1.35
 
 dev_dependencies:
   flutter_test:

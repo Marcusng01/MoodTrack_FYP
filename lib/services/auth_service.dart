@@ -149,4 +149,13 @@ class AuthService {
     CollectionReference users = _firebaseFirestore.collection('users');
     return users.doc(currentUser!.uid).get();
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamSearchStudentDocs(
+      String counselorCode) {
+    return _firebaseFirestore
+        .collection('/users')
+        .where('counselorCode', isEqualTo: counselorCode)
+        .where('isCounsellor', isEqualTo: false)
+        .snapshots();
+  }
 }

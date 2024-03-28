@@ -36,59 +36,59 @@ class AppColors {
   static Color getColorForEmotion(String emotion, Color defaultColor) {
     switch (emotion.toLowerCase()) {
       case 'admiration':
-        return Color(0xFFE57373);
+        return const Color(0xFFE57373);
       case 'amusement':
-        return Color(0xFF81C784);
+        return const Color(0xFF81C784);
       case 'anger':
-        return Color(0xFFEF5350);
+        return const Color(0xFFEF5350);
       case 'annoyance':
-        return Color(0xFF757575);
+        return const Color(0xFF757575);
       case 'approval':
-        return Color(0xFF4DB6AC);
+        return const Color(0xFF4DB6AC);
       case 'caring':
-        return Color(0xFFE57373);
+        return const Color(0xFFE57373);
       case 'confusion':
-        return Color(0xFFBA68C8);
+        return const Color(0xFFBA68C8);
       case 'curiosity':
-        return Color(0xFF9575CD);
+        return const Color(0xFF9575CD);
       case 'desire':
-        return Color(0xFFFFB74D);
+        return const Color(0xFFFFB74D);
       case 'disappointment':
-        return Color(0xFFA1887F);
+        return const Color(0xFFA1887F);
       case 'disapproval':
-        return Color(0xFFB0BEC5);
+        return const Color(0xFFB0BEC5);
       case 'disgust':
-        return Color(0xFF8D6E63);
+        return const Color(0xFF8D6E63);
       case 'embarrassment':
-        return Color(0xFFE57373);
+        return const Color(0xFFE57373);
       case 'excitement':
-        return Color(0xFFFFB74D);
+        return const Color(0xFFFFB74D);
       case 'fear':
-        return Color(0xFF607D8B);
+        return const Color(0xFF607D8B);
       case 'gratitude':
-        return Color(0xFF4CAF50);
+        return const Color(0xFF4CAF50);
       case 'grief':
-        return Color(0xFF455A64);
+        return const Color(0xFF455A64);
       case 'joy':
-        return Color(0xFFFFD54F);
+        return const Color(0xFFFFD54F);
       case 'love':
-        return Color(0xFFFF8A80);
+        return const Color(0xFFFF8A80);
       case 'nervousness':
-        return Color(0xFFE57373);
+        return const Color(0xFFE57373);
       case 'optimism':
-        return Color(0xFF4CAF50);
+        return const Color(0xFF4CAF50);
       case 'pride':
-        return Color(0xFF7E57C2);
+        return const Color(0xFF7E57C2);
       case 'realization':
-        return Color(0xFFFF8A80);
+        return const Color(0xFFFF8A80);
       case 'relief':
-        return Color(0xFF4DB6AC);
+        return const Color(0xFF4DB6AC);
       case 'remorse':
-        return Color(0xFFA1887F);
+        return const Color(0xFFA1887F);
       case 'sadness':
-        return Color.fromARGB(255, 44, 188, 255);
+        return const Color.fromARGB(255, 44, 188, 255);
       case 'surprise':
-        return Color(0xFFBA68C8);
+        return const Color(0xFFBA68C8);
       case 'neutral':
         return defaultColor;
       default:

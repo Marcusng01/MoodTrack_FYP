@@ -19,8 +19,8 @@ class StudentDashboard extends StatefulWidget {
 }
 
 class _MyStudentDashboardState extends State<StudentDashboard> {
-  AuthService _auth = AuthService();
-  FirestoreService _firestoreService = FirestoreService();
+  final AuthService _auth = AuthService();
+  final FirestoreService _firestoreService = FirestoreService();
 
   Widget dashboadButtonText(head, body, foot) {
     return SizedBox(
@@ -88,7 +88,7 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
 
   Future<Map<String, dynamic>> counsellorData(String counselorCode) async {
     var doc = await _auth.currentUserCounsellorDoc();
-    return doc.data! as Map<String, dynamic>;
+    return doc.data as Map<String, dynamic>;
   }
 
   Widget messageButton(userData, head, body, foot, icon) {
