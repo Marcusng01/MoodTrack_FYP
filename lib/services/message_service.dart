@@ -20,7 +20,8 @@ class MessageService extends ChangeNotifier {
         senderEmail: currentUserEmail,
         receiverId: receiverId,
         timestamp: timestamp,
-        message: message);
+        message: message,
+        unread: true);
 
     //add message and chatroom (if it didn't exist) to database
     String chatRoomId = getChatRoomId(currentUserId, receiverId);
@@ -36,6 +37,21 @@ class MessageService extends ChangeNotifier {
     ids.sort();
     String chatRoomId = ids.join("_");
     return chatRoomId;
+  }
+
+  Future<void> setMultipleMessageAsRead(
+      String readerId, String senderId) async {
+    String chatRoomId = getChatRoomId(readerId, senderId);
+    QuerySnapshot querySnapshot = await _firebaseFirestore
+        .collection("chat_rooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .where("receiverId", isEqualTo: readerId)
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.update({"unread": false});
+    }
   }
 
   //Get Messages

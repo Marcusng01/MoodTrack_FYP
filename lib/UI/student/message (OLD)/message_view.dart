@@ -21,17 +21,22 @@ class _MyMessageViewState extends State<MessageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.receiverUsername)),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildMessageList(),
-          ),
-          _buildMessageInput()
-        ],
-      ),
-    );
+    return FutureBuilder(
+        future: _controller.messageService.setMultipleMessageAsRead(
+            _controller.getCurrentUserId(), widget.receiverUserId),
+        builder: (context, snapshot) {
+          return Scaffold(
+            appBar: AppBar(title: Text(widget.receiverUsername)),
+            body: Column(
+              children: [
+                Expanded(
+                  child: _buildMessageList(),
+                ),
+                _buildMessageInput()
+              ],
+            ),
+          );
+        });
   }
 
   Widget _buildMessageList() {
