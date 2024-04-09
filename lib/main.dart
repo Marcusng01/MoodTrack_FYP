@@ -3,7 +3,6 @@ import 'package:ai_mood_tracking_application/ui/authentication/auth_gate.dart';
 import 'package:ai_mood_tracking_application/ui/authentication/register/register_view.dart';
 import 'package:ai_mood_tracking_application/ui/authentication/register_success/register_success_view.dart';
 import 'package:ai_mood_tracking_application/ui/authentication/select_user_type/select_user_type_view.dart';
-import 'package:ai_mood_tracking_application/ui/student/analyse/analyse_view.dart';
 import 'package:ai_mood_tracking_application/ui/student/dashboard/student_dashboard.dart';
 import 'package:ai_mood_tracking_application/ui/student/journaling/journal_calendar/journal_calendar_view.dart';
 import 'package:ai_mood_tracking_application/ui/student/journaling/journal_reflect/journal_reflect_view.dart';
@@ -61,7 +60,6 @@ class MyApp extends StatelessWidget {
               receiverUsername: '',
               receiverUserId: '',
             ),
-        "/Student/Analyse": (context) => AnalyseView(title: "Analyse"),
       },
       // onGenerateRoute: (settings) {
       //   if (settings.name == '/Student/Journaling/Writing') {

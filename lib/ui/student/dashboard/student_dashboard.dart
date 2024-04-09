@@ -1,7 +1,7 @@
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
-import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
 import 'package:ai_mood_tracking_application/styles/text_styles.dart';
+import 'package:ai_mood_tracking_application/ui/student/analyse/analyse_view.dart';
 import 'package:ai_mood_tracking_application/ui/student/message%20(OLD)/message_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,6 @@ class StudentDashboard extends StatefulWidget {
 
 class _MyStudentDashboardState extends State<StudentDashboard> {
   final AuthService _auth = AuthService();
-  final FirestoreService _firestoreService = FirestoreService();
 
   Widget dashboadButtonText(head, body, foot) {
     return SizedBox(
@@ -80,10 +79,45 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
             "Reminders", "Breath in and out", "See More", Icons.list),
         messageButton(userData, "Message Counsellor", "You: Last Message",
             "Today 3:14pm", Icons.mail),
-        dashboardButton(
-            "Analyse", "Generate Reports", "Click Here", Icons.pie_chart)
+        analyseButton(userData, "Analyse", "Generate Reports", "Click Here",
+            Icons.pie_chart)
       ],
     );
+  }
+
+  Widget analyseButton(userData, head, body, foot, icon) {
+    return StreamBuilder(
+        stream: _auth.streamUserDetails(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error${snapshot.error}');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading...");
+          }
+          var userDoc = snapshot.data!.docs.toList()[0];
+          var userData = userDoc.data();
+          return ElevatedButton(
+            onPressed: () => {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AnalyseView(
+                          username: userData["username"],
+                          userId: userData["id"])))
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  dashboadButtonText(head, body, foot),
+                  dashboardButtonIcon(icon)
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Future<Map<String, dynamic>> counsellorData(String counselorCode) async {

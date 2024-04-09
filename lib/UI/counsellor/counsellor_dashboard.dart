@@ -1,6 +1,5 @@
 import 'package:ai_mood_tracking_application/commons/chat_trailing_icon.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
-import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/services/message_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
 import 'package:ai_mood_tracking_application/styles/text_styles.dart';
@@ -24,8 +23,6 @@ class CounsellorDashboard extends StatefulWidget {
 
 class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle = AppTextStyles.smallBlackText;
-  final FirestoreService _firestoreService = FirestoreService();
   final AuthService _auth = AuthService();
   final MessageService _messageService = MessageService();
   void _onItemTapped(int index) {
@@ -34,6 +31,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: _auth.streamUserDetails(),
@@ -42,11 +40,26 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
             return Text('Error${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading...");
+            return counsellorDashboardLoadingScreen();
           }
           Map<String, dynamic> userData = snapshot.data!.docs.first.data();
           return counsellorDashboardScreen(userData);
         });
+  }
+
+  Widget counsellorDashboardLoadingScreen() {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text("Your Students"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+            Column(children: <Widget>[searchBar(), const Text("Loading...")]),
+      ),
+      bottomNavigationBar: counsellorBottomNavBar(),
+    );
   }
 
   Widget counsellorDashboardScreen(Map<String, dynamic> userData) {
@@ -55,7 +68,10 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Your Students"),
       ),
-      body: Padding(padding: const EdgeInsets.all(8.0), child: list(userData)),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(children: <Widget>[searchBar(), listBody(userData)]),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           AuthService().signOut();
@@ -64,14 +80,6 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
       ),
       bottomNavigationBar: counsellorBottomNavBar(),
     );
-  }
-
-  Widget list(Map<String, dynamic> userData) {
-    return Column(children: <Widget>[
-      // ListHeader(),
-      searchBar(),
-      listBody(userData),
-    ]);
   }
 
   Widget searchBar() {
@@ -127,15 +135,42 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
                     // Access each document's data
                     Map<String, dynamic> studentData =
                         snapshot.data!.docs[index].data();
-                    // Pass both counselorData and studentData to listItem
-                    return listItem(counselorData, studentData);
+                    // Pass both counselorData and studentData to messageListItem
+                    return messageListItem(counselorData, studentData);
+                    // _selectedIndex == 1
+                    //     ? messageListItem(counselorData, studentData)
+                    //     : analyseListItem(studentData);
                   }),
             ),
           );
         });
   }
 
-  Widget listItem(
+  // Widget analyseListItem(Map<String, dynamic> studentData) {
+  //   String username = studentData['username'];
+  //   String journalData = studentData["j"]
+  //         return GestureDetector(
+  //             onTap: () {
+
+  //             Navigator.push(
+  //                 context,
+  //                 MaterialPageRoute(
+  //                     builder: (context) => AnalyseView(
+  //                         username: userData["username"],
+  //                         userId: userData["id"])))
+  //             },
+  //             child: Card(
+  //               child: ListTile(
+  //                 leading: const Icon(Icons.person),
+  //                 title: messageListItemTitle(username, latestMessageData),
+  //                 subtitle: messageListItemSubtitle(
+  //                     counselorData, studentData, latestMessageData),
+  //               ),
+  //             ));
+  //       });
+  // }
+
+  Widget messageListItem(
       Map<String, dynamic> counselorData, Map<String, dynamic> studentData) {
     String username = studentData['username'];
     return StreamBuilder(
@@ -146,9 +181,14 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
             return Text('Error${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading...",
-                style: AppTextStyles.mediumGreyText,
-                overflow: TextOverflow.ellipsis);
+            return const Card(
+              child: ListTile(
+                leading: Icon(Icons.person),
+                title: Text("Loading...",
+                    style: AppTextStyles.mediumGreyText,
+                    overflow: TextOverflow.ellipsis),
+              ),
+            );
           }
 
           Map<String, dynamic> latestMessageData =
@@ -167,18 +207,18 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
               child: Card(
                 child: ListTile(
                   leading: const Icon(Icons.person),
-                  title: listItemTitle(username, latestMessageData),
-                  subtitle: listItemSubtitle(
+                  title: messageListItemTitle(username, latestMessageData),
+                  subtitle: messageListItemSubtitle(
                       counselorData, studentData, latestMessageData),
                 ),
               ));
         });
   }
 
-  Widget listItemTitle(
+  Widget messageListItemTitle(
       String username, Map<String, dynamic> latestMessageData) {
     String timeString = latestMessageData.isNotEmpty
-        ? customTimestampToString(latestMessageData["timestamp"])
+        ? messageTimestampToString(latestMessageData["timestamp"])
         : "";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -196,7 +236,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
     );
   }
 
-  String customTimestampToString(Timestamp time) {
+  String messageTimestampToString(Timestamp time) {
     // Convert Timestamp to DateTime
     DateTime dateTime = time.toDate();
 
@@ -222,7 +262,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
     }
   }
 
-  Widget listItemSubtitle(
+  Widget messageListItemSubtitle(
       Map<String, dynamic> counselorData,
       Map<String, dynamic> studentData,
       Map<String, dynamic> latestMessageData) {

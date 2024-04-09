@@ -122,10 +122,10 @@ class FirestoreService {
     }
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> streamJournals() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamJournals(String? id) {
     return _firebaseFirestore
         .collection('users')
-        .doc(currentUser?.uid)
+        .doc(id)
         .collection('journals')
         .snapshots();
   }

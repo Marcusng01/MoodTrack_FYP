@@ -39,7 +39,7 @@ class _MyResultScreenState extends State<JournalResultView> {
     );
   }
 
-  Widget journalInputContainer(context) {
+  Widget journalContainer(context) {
     List<String> sentences = List<String>.from(controller.doc["sentences"]);
     List<String> mood = List<String>.from(controller.doc["mood"]);
     List<TextSpan> textSpans = [];
@@ -55,11 +55,12 @@ class _MyResultScreenState extends State<JournalResultView> {
             controller: controller.scrollController,
             // child: journalInputField()
             /*TO DO: Build Textspans based on sentences and mood from Flask*/
-            child: RichText(
+            child: SingleChildScrollView(
+                child: RichText(
               text: TextSpan(
                 children: textSpans,
               ),
-            )));
+            ))));
   }
 
   Widget ratingButton(String rating) {
@@ -122,7 +123,7 @@ class _MyResultScreenState extends State<JournalResultView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  journalInputContainer(context),
+                  journalContainer(context),
                   rateDayContainer()
                 ],
               ),

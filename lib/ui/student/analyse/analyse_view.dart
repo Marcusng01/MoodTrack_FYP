@@ -9,8 +9,13 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AnalyseView extends StatefulWidget {
-  AnalyseView({super.key, required this.title});
-  final String title;
+  final String username;
+  final String userId;
+  AnalyseView({
+    super.key,
+    required this.username,
+    required this.userId,
+  });
   final User? user = AuthService().currentUser;
   Future<void> signOut() async {
     await AuthService().signOut();
@@ -23,7 +28,8 @@ class AnalyseView extends StatefulWidget {
 class _MyAnalyseViewState extends State<AnalyseView> {
   final FirestoreService _firestoreService = FirestoreService();
   late String chartTitle = "";
-  DateRangePickerController _datePickerController = DateRangePickerController();
+  final DateRangePickerController _datePickerController =
+      DateRangePickerController();
   DateTime now = DateTime.now();
 
   @override
@@ -33,6 +39,56 @@ class _MyAnalyseViewState extends State<AnalyseView> {
         DateTime(now.year, now.month, 1),
         DateTime(now.year, now.month + 1, 1)
             .subtract(const Duration(days: 1))));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return analyseScreen();
+  }
+
+  Widget analyseScreen() {
+    // Widget analyseScreen() {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.username),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            datePicker(context),
+            radialChart(),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        // onPressed: () => _selectDate(context),
+        onPressed: () {},
+        label: const Text('Select Month'),
+      ),
+    );
+  }
+
+  Widget datePicker(BuildContext context) {
+    return SfDateRangePicker(
+      view: DateRangePickerView.month,
+      initialSelectedRange: _datePickerController.selectedRange,
+      selectionMode: DateRangePickerSelectionMode.range,
+      showActionButtons: true,
+      onSubmit: (Object? value) {
+        _setDateRange(value);
+      },
+      onCancel: () {
+        setState(() {
+          _datePickerController.selectedRange = PickerDateRange(
+              DateTime(now.year, now.month, 1),
+              DateTime(now.year, now.month + 1, 1)
+                  .subtract(const Duration(days: 1)));
+          chartTitle = '';
+        });
+      },
+    );
   }
 
   void _setDateRange(dynamic value) {
@@ -49,36 +105,9 @@ class _MyAnalyseViewState extends State<AnalyseView> {
     }
   }
 
-  List<MoodData> _getMoodCount(List<Map<String, dynamic>> journals) {
-    var moodCount = <MoodData>[];
-    if (_datePickerController.selectedRange != null) {
-      Timestamp start =
-          Timestamp.fromDate(_datePickerController.selectedRange!.startDate!);
-      Timestamp end = _datePickerController.selectedRange!.endDate != null
-          ? Timestamp.fromDate(_datePickerController.selectedRange!.endDate!)
-          : start;
-      var count = {};
-      for (var entry in journals) {
-        if (entry['date'].compareTo(start) >= 0 &&
-            entry['date'].compareTo(end) <= 0) {
-          for (var mood in entry['mood']) {
-            count.update(
-              mood,
-              (existingValue) =>
-                  existingValue is int ? existingValue + 1.0 : 1.0,
-              ifAbsent: () => 1.0,
-            );
-          }
-        }
-      }
-      count.forEach((k, v) => moodCount.add(MoodData(k, v)));
-    }
-    return moodCount;
-  }
-
   Widget radialChart() {
     return StreamBuilder(
-        stream: _firestoreService.streamJournals(),
+        stream: _firestoreService.streamJournals(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error${snapshot.error}');
@@ -113,54 +142,33 @@ class _MyAnalyseViewState extends State<AnalyseView> {
         });
   }
 
-  Widget datePicker(BuildContext context) {
-    return SfDateRangePicker(
-      view: DateRangePickerView.month,
-      initialSelectedRange: _datePickerController.selectedRange,
-      selectionMode: DateRangePickerSelectionMode.range,
-      showActionButtons: true,
-      onSubmit: (Object? value) {
-        _setDateRange(value);
-      },
-      onCancel: () {
-        setState(() {
-          _datePickerController.selectedRange = PickerDateRange(
-              DateTime(now.year, now.month, 1),
-              DateTime(now.year, now.month + 1, 1)
-                  .subtract(const Duration(days: 1)));
-          chartTitle = '';
-        });
-      },
-    );
-  }
-
-  Widget analyseScreen() {
-    // Widget analyseScreen() {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            datePicker(context),
-            radialChart(),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        // onPressed: () => _selectDate(context),
-        onPressed: () {},
-        label: const Text('Select Month'),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return analyseScreen();
+  List<MoodData> _getMoodCount(List<Map<String, dynamic>> journals) {
+    var moodCount = <MoodData>[];
+    if (_datePickerController.selectedRange != null) {
+      Timestamp start =
+          Timestamp.fromDate(_datePickerController.selectedRange!.startDate!);
+      Timestamp end = _datePickerController.selectedRange!.endDate != null
+          ? Timestamp.fromDate(_datePickerController.selectedRange!.endDate!)
+          : start;
+      var count = {};
+      for (var entry in journals) {
+        if (entry['date'].compareTo(start) >= 0 &&
+            entry['date'].compareTo(end) <= 0) {
+          for (var mood in entry['mood']) {
+            if (mood != "neutral") {
+              count.update(
+                mood,
+                (existingValue) =>
+                    existingValue is double ? existingValue + 1.0 : 1.0,
+                ifAbsent: () => 1.0,
+              );
+            }
+          }
+        }
+      }
+      count.forEach((k, v) => moodCount.add(MoodData(k, v)));
+    }
+    return moodCount;
   }
 }
 
