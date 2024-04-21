@@ -1,8 +1,10 @@
+import 'package:ai_mood_tracking_application/commons/ProfilePictureClipper.dart';
+import 'package:ai_mood_tracking_application/commons/profile_button.dart';
+import 'package:ai_mood_tracking_application/commons/profile_button_row.dart';
+import 'package:ai_mood_tracking_application/commons/profile_data_row.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/services/message_service.dart';
-import 'package:ai_mood_tracking_application/styles/color_styles.dart';
-import 'package:ai_mood_tracking_application/styles/text_styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -46,11 +48,10 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
         title: const Text("Profile"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: const EdgeInsets.all(0),
         child: Column(children: <Widget>[
-          profilePictureContainer(),
+          profilePictureContainer(userData, () {}), //TODO
           userDataContainer(userData),
-          shareButton()
         ]),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -62,44 +63,66 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
     );
   }
 
-  Widget profilePictureContainer() {
-    return const Icon(Icons.person, size: 200);
+  Widget profilePictureContainer(
+      Map<String, dynamic> userData, VoidCallback onTap) {
+    String imageUrl = 'assets/account_circle.png';
+    if (userData["profilePicture"] != "" &&
+        userData.containsKey("profilePicture")) {
+      imageUrl = userData["profilePicture"];
+    }
+
+    return Column(
+      children: [
+        Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+            child: ClipOval(
+                clipper: ProfilePictureClipper(),
+                child: Material(
+                    color: Colors
+                        .transparent, // Use transparent color for Material
+                    child: InkWell(
+                        onTap: onTap,
+                        child: Image.asset(
+                          imageUrl,
+                          width: 150.0,
+                          height: 150.0,
+                        ))))),
+        ProfileButton(title: "Change Profile Picture", onTap: onTap),
+      ],
+    );
   }
 
   Widget userDataContainer(Map<String, dynamic> userData) {
     return SizedBox(
-        width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
+        // 80% of screen width
         child: Column(children: <Widget>[
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[const Text("Email"), Text(userData["email"])]),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Text("Username"),
-                Text(userData["username"])
-              ]),
-          const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[Text("Password"), Text("hidden")]),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Text("Counselor Code"),
-                Text(userData["counselorCode"])
-              ]),
-        ]));
-  }
-
-  Widget shareButton() {
-    return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height:
-            MediaQuery.of(context).size.height * 0.05, // 80% of screen width
-        color: AppColors.blueSurface,
-        child: const Center(
-            child:
-                Text("Share app now!", style: AppTextStyles.mediumWhiteText)));
+      ProfileDataRow(
+        title: "Email",
+        data: userData["email"],
+        onTap: () => {}, //TODO
+        subtitle: "",
+      ),
+      ProfileDataRow(
+        title: "Username",
+        subtitle: "Edit",
+        data: userData["username"],
+        onTap: () => {}, //TODO
+      ),
+      ProfileDataRow(
+        title: "Password",
+        subtitle: "Edit",
+        data: "hidden",
+        onTap: () => {}, //TODO
+      ),
+      ProfileDataRow(
+        title: "Counselor Code",
+        subtitle: "Copy to Clipboard",
+        data: userData["counselorCode"],
+        onTap: () => {}, //TODO
+      ),
+      ProfileButtonRow(title: "Share app now!", onTap: () => {} //TODO
+          )
+    ]));
   }
 
   Widget counsellorProfileLoadingScreen() {
