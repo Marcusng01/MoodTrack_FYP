@@ -81,6 +81,7 @@ class AuthService {
           .collection('users')
           .doc(userCredential.user!.uid)
           .set({
+        'email': email.text,
         'username': username.text,
         'isCounsellor': isCounsellor,
         'counselorCode': counselorCodeHash,

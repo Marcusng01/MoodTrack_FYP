@@ -40,7 +40,6 @@ class AnalyseListItem extends StatelessWidget {
           Map<String, dynamic> lastJournalData = snapshot.data!.docs.isNotEmpty
               ? snapshot.data!.docs.last.data()
               : {};
-          print("Student Journal: ${lastJournalData["mood"]}");
           return GestureDetector(
               onTap: () {
                 Navigator.push(

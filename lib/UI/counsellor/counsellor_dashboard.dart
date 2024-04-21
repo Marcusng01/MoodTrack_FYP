@@ -4,6 +4,7 @@ import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/services/message_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
+import 'package:ai_mood_tracking_application/ui/counsellor/counsellor_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +52,18 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Your Students"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.menu), // Hamburger icon
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CounsellorProfile(title: 'Profile')));
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -67,6 +79,18 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Your Students"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.menu), // Hamburger icon
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CounsellorProfile(title: 'Profile')));
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -185,10 +209,6 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
         BottomNavigationBarItem(
           icon: Icon(Icons.pie_chart),
           label: 'Analyse',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
         ),
       ],
       currentIndex: _selectedIndex,
