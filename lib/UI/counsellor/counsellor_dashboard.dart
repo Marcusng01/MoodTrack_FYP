@@ -4,7 +4,7 @@ import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/services/message_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
-import 'package:ai_mood_tracking_application/ui/counsellor/counsellor_profile.dart';
+import 'package:ai_mood_tracking_application/ui/counsellor/profile/counsellor_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

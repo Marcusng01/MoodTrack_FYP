@@ -5,6 +5,7 @@ import 'package:ai_mood_tracking_application/commons/profile_data_row.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/services/message_service.dart';
+import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_username_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -106,7 +107,15 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
         title: "Username",
         subtitle: "Edit",
         data: userData["username"],
-        onTap: () => {}, //TODO
+        onTap: () => {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProfileChangeUsernameView(
+                        title: 'Edit Username',
+                        defaultUsername: userData["username"],
+                      )))
+        },
       ),
       ProfileDataRow(
         title: "Password",

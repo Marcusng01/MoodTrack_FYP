@@ -183,6 +183,16 @@ class FirestoreService {
       return dateTimeRatingMap;
     });
   }
+
+  DocumentReference getUserDetailsReference() {
+    final CollectionReference users = _firebaseFirestore.collection('users');
+    return users.doc(currentUser?.uid);
+  }
+
+  void updateUsername(String username) {
+    final DocumentReference journal = getUserDetailsReference();
+    journal.update({'username': username});
+  }
 }
 
 fetchdata(String url) async {
