@@ -3,8 +3,7 @@ import 'package:ai_mood_tracking_application/commons/profile_button.dart';
 import 'package:ai_mood_tracking_application/commons/profile_button_row.dart';
 import 'package:ai_mood_tracking_application/commons/profile_data_row.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
-import 'package:ai_mood_tracking_application/services/firestore_service.dart';
-import 'package:ai_mood_tracking_application/services/message_service.dart';
+import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_password_view.dart';
 import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_username_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +22,6 @@ class CounsellorProfile extends StatefulWidget {
 
 class _MyCounsellorProfileState extends State<CounsellorProfile> {
   final AuthService _auth = AuthService();
-  final FirestoreService _firestoreService = FirestoreService();
-  final MessageService _messageService = MessageService();
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +118,14 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
         title: "Password",
         subtitle: "Edit",
         data: "hidden",
-        onTap: () => {}, //TODO
+        onTap: () => {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProfileChangePasswordView(
+                        title: 'Edit Password',
+                      )))
+        },
       ),
       ProfileDataRow(
         title: "Counselor Code",

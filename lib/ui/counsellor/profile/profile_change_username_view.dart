@@ -1,3 +1,4 @@
+import 'package:ai_mood_tracking_application/commons/profile_confirm_edit_dialog.dart';
 import 'package:ai_mood_tracking_application/commons/text_field.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
@@ -30,55 +31,38 @@ class _MyCounsellorProfileState extends State<ProfileChangeUsernameView> {
         appBar: AppBar(
           title: Text(widget.title),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Done",
-                style: AppTextStyles.mediumBlueText,
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                      title: const Text('Edit Username?'),
-                      content: const Text(
-                          "Are you sure you want to edit your username?."),
-                      actions: [
-                        TextButton(
-                            onPressed: () => {
-                                  Navigator.of(context).pop(),
-                                  _firestoreService.updateUsername(
-                                      textEditingController.text),
-                                  Navigator.pop(context)
-                                },
-                            child: const Text(
-                              "Yes",
-                              style: AppTextStyles.mediumBlueText,
-                            )),
-                        TextButton(
-                            onPressed: () => {Navigator.of(context).pop()},
-                            child: const Text(
-                              "Cancel",
-                              style: AppTextStyles.mediumGreyText,
-                            ))
-                      ]),
-                );
-              },
-            ),
-          ],
+          actions: <Widget>[doneButton()],
         ),
         body: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: entryField("Username", textEditingController)),
+                entryField("Username", textEditingController),
+                const SizedBox(height: 10),
                 const Text(
                   "Modify your username so that other users are able to identify you.",
                   style: AppTextStyles.mediumGreyText,
                 )
               ],
             )));
+  }
+
+  Widget doneButton() {
+    return TextButton(
+        child: const Text(
+          "Done",
+          style: AppTextStyles.mediumBlueText,
+        ),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) => ProfileConfirmEditDialog(
+                  title: "Edit Username?",
+                  subtitle: "Are you sure you want to edit your username?.",
+                  updateData: () {
+                    _firestoreService
+                        .updateUsername(textEditingController.text);
+                  }));
+        });
   }
 }
