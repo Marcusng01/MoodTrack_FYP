@@ -16,8 +16,9 @@ class ProfileConfirmEditDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(title: Text(title), content: Text(subtitle), actions: [
       TextButton(
-          onPressed: () =>
-              {Navigator.of(context).pop(), updateData, Navigator.pop(context)},
+          onPressed: () {
+            updateData();
+          },
           child: const Text(
             "Yes",
             style: AppTextStyles.mediumBlueText,

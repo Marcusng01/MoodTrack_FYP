@@ -60,8 +60,10 @@ class _MyCounsellorProfileState extends State<ProfileChangeUsernameView> {
                   title: "Edit Username?",
                   subtitle: "Are you sure you want to edit your username?.",
                   updateData: () {
+                    Navigator.of(context).pop();
                     _firestoreService
                         .updateUsername(textEditingController.text);
+                    Navigator.pop(context);
                   }));
         });
   }

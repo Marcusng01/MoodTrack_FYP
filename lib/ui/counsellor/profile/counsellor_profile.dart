@@ -1,7 +1,7 @@
-import 'package:ai_mood_tracking_application/commons/ProfilePictureClipper.dart';
 import 'package:ai_mood_tracking_application/commons/profile_button.dart';
 import 'package:ai_mood_tracking_application/commons/profile_button_row.dart';
 import 'package:ai_mood_tracking_application/commons/profile_data_row.dart';
+import 'package:ai_mood_tracking_application/commons/profile_picture_clipper.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_password_view.dart';
 import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_username_view.dart';
