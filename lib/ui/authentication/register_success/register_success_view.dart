@@ -27,7 +27,7 @@ class _MyRegisterSuccessViewState extends State<RegisterSuccessView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             success(username, isCounsellor),
-            counselor(counselorCode),
+            counselor(context, counselorCode),
           ],
         )),
         floatingActionButton: FloatingActionButton.extended(
@@ -75,7 +75,10 @@ class _MyRegisterSuccessViewState extends State<RegisterSuccessView> {
   }
 }
 
-Widget counselor(counselorCode) {
+Widget counselor(context, counselorCode) {
+  SnackBar snackBar = const SnackBar(
+    content: Text("Copied to Clipboard"),
+  );
   return Column(
     children: [
       const Text("Your Counselor Code", style: AppTextStyles.mediumBlueText),
@@ -84,6 +87,7 @@ Widget counselor(counselorCode) {
         icon: const Icon(Icons.copy),
         onPressed: () {
           Clipboard.setData(ClipboardData(text: counselorCode));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         },
       ),
     ],

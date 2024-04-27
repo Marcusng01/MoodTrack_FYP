@@ -3,10 +3,11 @@ import 'package:ai_mood_tracking_application/commons/profile_button_row.dart';
 import 'package:ai_mood_tracking_application/commons/profile_data_row.dart';
 import 'package:ai_mood_tracking_application/commons/profile_picture_clipper.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
-import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_password_view.dart';
-import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_username_view.dart';
+import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_password/profile_change_password_view.dart';
+import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_username/profile_change_username_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CounsellorProfile extends StatefulWidget {
   CounsellorProfile({super.key, required this.title});
@@ -91,6 +92,9 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
   }
 
   Widget userDataContainer(Map<String, dynamic> userData) {
+    SnackBar snackBar = const SnackBar(
+      content: Text("Copied to Clipboard"),
+    );
     return SizedBox(
         // 80% of screen width
         child: Column(children: <Widget>[
@@ -131,7 +135,10 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
         title: "Counselor Code",
         subtitle: "Copy to Clipboard",
         data: userData["counselorCode"],
-        onTap: () => {}, //TODO
+        onTap: () => {
+          Clipboard.setData(ClipboardData(text: userData["counselorCode"])),
+          ScaffoldMessenger.of(context).showSnackBar(snackBar),
+        }, //TODO
       ),
       ProfileButtonRow(title: "Share app now!", onTap: () => {} //TODO
           )
