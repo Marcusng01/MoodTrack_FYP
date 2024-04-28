@@ -1,13 +1,18 @@
+import 'dart:io';
+
 import 'package:ai_mood_tracking_application/commons/profile_button.dart';
 import 'package:ai_mood_tracking_application/commons/profile_button_row.dart';
 import 'package:ai_mood_tracking_application/commons/profile_data_row.dart';
 import 'package:ai_mood_tracking_application/commons/profile_picture_clipper.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
+import 'package:ai_mood_tracking_application/services/firestore_service.dart';
+import 'package:ai_mood_tracking_application/services/storage_service.dart';
 import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_password/profile_change_password_view.dart';
 import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_username/profile_change_username_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CounsellorProfile extends StatefulWidget {
   CounsellorProfile({super.key, required this.title});
@@ -23,6 +28,8 @@ class CounsellorProfile extends StatefulWidget {
 
 class _MyCounsellorProfileState extends State<CounsellorProfile> {
   final AuthService _auth = AuthService();
+  final StorageService _storage = StorageService();
+  final FirestoreService _firestore = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +71,18 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
 
   Widget profilePictureContainer(
       Map<String, dynamic> userData, VoidCallback onTap) {
-    String imageUrl = 'assets/account_circle.png';
+    Image image = Image.asset(
+      'assets/account_circle.png',
+      width: 150.0,
+      height: 150.0,
+    );
     if (userData["profilePicture"] != "" &&
         userData.containsKey("profilePicture")) {
-      imageUrl = userData["profilePicture"];
+      image = Image.network(
+        userData["profilePicture"],
+        width: 150.0,
+        height: 150.0,
+      );
     }
 
     return Column(
@@ -79,14 +94,12 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
                 child: Material(
                     color: Colors
                         .transparent, // Use transparent color for Material
-                    child: InkWell(
-                        onTap: onTap,
-                        child: Image.asset(
-                          imageUrl,
-                          width: 150.0,
-                          height: 150.0,
-                        ))))),
-        ProfileButton(title: "Change Profile Picture", onTap: onTap),
+                    child: InkWell(onTap: onTap, child: image)))),
+        ProfileButton(
+            title: "Change Profile Picture",
+            onTap: () {
+              _pickImageFromGallery();
+            }),
       ],
     );
   }
@@ -101,7 +114,7 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
       ProfileDataRow(
         title: "Email",
         data: userData["email"],
-        onTap: () => {}, //TODO
+        onTap: () => {},
         subtitle: "",
       ),
       ProfileDataRow(
@@ -138,7 +151,7 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
         onTap: () => {
           Clipboard.setData(ClipboardData(text: userData["counselorCode"])),
           ScaffoldMessenger.of(context).showSnackBar(snackBar),
-        }, //TODO
+        },
       ),
       ProfileButtonRow(title: "Share app now!", onTap: () => {} //TODO
           )
@@ -155,5 +168,13 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
           padding: EdgeInsets.all(8.0),
           child: Column(children: [Text("Loading...")])),
     );
+  }
+
+  Future _pickImageFromGallery() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnedImage == null) return;
+    await _storage.uploadImage(File(returnedImage.path));
+    _firestore.updateProfilePictureUrl(_storage.imageUrl);
   }
 }

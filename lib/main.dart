@@ -21,6 +21,7 @@ Future<void> main() async {
       appId: "1:307929323963:android:521038d0f15622d59c8c9e",
       messagingSenderId: "307929323963",
       projectId: "ai-mood-tracking-app",
+      storageBucket: "gs://ai-mood-tracking-app.appspot.com",
     ),
   );
   runApp(const MyApp());

@@ -46,6 +46,8 @@ dependencies:
   syncfusion_flutter_charts: ^25.1.35
   sliding_up_panel: ^2.0.0+1
   syncfusion_flutter_datepicker: ^25.1.35
+  image_picker: ^1.1.0
+  firebase_storage: ^11.7.4
 
 dev_dependencies:
   flutter_test:

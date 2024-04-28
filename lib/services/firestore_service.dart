@@ -190,8 +190,13 @@ class FirestoreService {
   }
 
   void updateUsername(String username) {
-    final DocumentReference journal = getUserDetailsReference();
-    journal.update({'username': username});
+    final DocumentReference userDetails = getUserDetailsReference();
+    userDetails.update({'username': username});
+  }
+
+  void updateProfilePictureUrl(String imageUrl) {
+    final DocumentReference userDetails = getUserDetailsReference();
+    userDetails.update({'profilePicture': imageUrl});
   }
 }
 
