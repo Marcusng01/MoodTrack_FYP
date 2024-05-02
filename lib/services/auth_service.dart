@@ -131,6 +131,16 @@ class AuthService {
         .snapshots();
   }
 
+  Future<String> getCounsellorUsername(String counselorCode) async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firebaseFirestore
+        .collection('/users')
+        .where('counselorCode', isEqualTo: counselorCode)
+        .where('isCounsellor', isEqualTo: true)
+        .limit(1)
+        .get();
+    return querySnapshot.docs.first.get('username') as String;
+  }
+
   // Stream<QuerySnapshot> streamCurrentUserCounsellorDoc() async {
   //   var snapshot = streamUserDetails();
   //   snapshot.first.

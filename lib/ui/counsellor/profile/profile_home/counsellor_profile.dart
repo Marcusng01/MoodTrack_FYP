@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CounsellorProfile extends StatefulWidget {
   CounsellorProfile({super.key, required this.title});
@@ -56,7 +57,9 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
       body: Padding(
         padding: const EdgeInsets.all(0),
         child: Column(children: <Widget>[
-          profilePictureContainer(userData, () {}), //TODO
+          profilePictureContainer(userData, () {
+            _pickImageFromGallery();
+          }),
           userDataContainer(userData),
         ]),
       ),
@@ -95,11 +98,7 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
                     color: Colors
                         .transparent, // Use transparent color for Material
                     child: InkWell(onTap: onTap, child: image)))),
-        ProfileButton(
-            title: "Change Profile Picture",
-            onTap: () {
-              _pickImageFromGallery();
-            }),
+        ProfileButton(title: "Change Profile Picture", onTap: onTap),
       ],
     );
   }
@@ -153,7 +152,14 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar),
         },
       ),
-      ProfileButtonRow(title: "Share app now!", onTap: () => {} //TODO
+      ProfileButtonRow(
+          title: "Share app now!",
+          onTap: () async {
+            String username =
+                await _auth.getCounsellorUsername(userData["counselorCode"]);
+            Share.share(
+                "Download MoodTrack now at:\nhttps://github.com/Marcusng01/MoodTrack_FYP\n\nFor Students:\nRegister using counselor code ${userData["counselorCode"]} to begin your healing journey with $username\n\nFor Counselors:\nRegister your account, then share your counselor code with your students.");
+          } //TODO
           )
     ]));
   }
