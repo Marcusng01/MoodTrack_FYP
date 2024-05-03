@@ -1,4 +1,5 @@
 import 'package:ai_mood_tracking_application/commons/chat_trailing_icon.dart';
+import 'package:ai_mood_tracking_application/commons/profile_picture.dart';
 import 'package:ai_mood_tracking_application/services/message_service.dart';
 import 'package:ai_mood_tracking_application/styles/text_styles.dart';
 import 'package:ai_mood_tracking_application/ui/student/message%20(OLD)/message_view.dart';
@@ -47,13 +48,12 @@ class MessageListItem extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => MessageView(
-                            receiverUsername: studentData["username"],
-                            receiverUserId: studentData["id"])));
+                        builder: (context) =>
+                            MessageView(receiverData: studentData)));
               },
               child: Card(
                 child: ListTile(
-                  leading: const Icon(Icons.person),
+                  leading: ProfilePicture(userData: studentData, size: 50),
                   title: messageListItemTitle(username, latestMessageData),
                   subtitle: messageListItemSubtitle(
                       counselorData, studentData, latestMessageData),

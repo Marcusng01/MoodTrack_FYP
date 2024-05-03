@@ -4,7 +4,7 @@ import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/services/message_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
-import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_home/counsellor_profile.dart';
+import 'package:ai_mood_tracking_application/ui//profile/profile_home/counsellor_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +54,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.menu), // Hamburger icon
+            icon: const Icon(Icons.menu), // Hamburger icon
             onPressed: () {
               Navigator.push(
                   context,
@@ -81,7 +81,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
         title: const Text("Your Students"),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.menu), // Hamburger icon
+            icon: const Icon(Icons.menu), // Hamburger icon
             onPressed: () {
               Navigator.push(
                   context,
@@ -174,30 +174,6 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
           );
         });
   }
-
-  // Widget analyseListItem(Map<String, dynamic> studentData) {
-  //   String username = studentData['username'];
-  //   String journalData = studentData["j"]
-  //         return GestureDetector(
-  //             onTap: () {
-
-  //             Navigator.push(
-  //                 context,
-  //                 MaterialPageRoute(
-  //                     builder: (context) => AnalyseView(
-  //                         username: userData["username"],
-  //                         userId: userData["id"])))
-  //             },
-  //             child: Card(
-  //               child: ListTile(
-  //                 leading: const Icon(Icons.person),
-  //                 title: messageListItemTitle(username, latestMessageData),
-  //                 subtitle: messageListItemSubtitle(
-  //                     counselorData, studentData, latestMessageData),
-  //               ),
-  //             ));
-  //       });
-  // }
 
   Widget counsellorBottomNavBar() {
     return BottomNavigationBar(

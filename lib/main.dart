@@ -8,7 +8,6 @@ import 'package:ai_mood_tracking_application/ui/student/journaling/journal_calen
 import 'package:ai_mood_tracking_application/ui/student/journaling/journal_reflect/journal_reflect_view.dart';
 import 'package:ai_mood_tracking_application/ui/student/journaling/journal_result/journal_result_view.dart';
 import 'package:ai_mood_tracking_application/ui/student/journaling/journal_writing/journal_writing_view.dart';
-import 'package:ai_mood_tracking_application/ui/student/message%20(OLD)/message_view.dart';
 import 'package:ai_mood_tracking_application/ui/student/reminders/reminders_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -57,10 +56,6 @@ class MyApp extends StatelessWidget {
         "/Student/Journaling/Result": (context) => JournalResultView(),
         "/Student/Reminders": (context) =>
             RemindersView(title: "Reminders of Past Reflections"),
-        "/Student/Message Counsellor": (context) => const MessageView(
-              receiverUsername: '',
-              receiverUserId: '',
-            ),
       },
       // onGenerateRoute: (settings) {
       //   if (settings.name == '/Student/Journaling/Writing') {

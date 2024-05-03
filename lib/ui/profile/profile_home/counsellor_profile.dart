@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:ai_mood_tracking_application/commons/profile_button.dart';
 import 'package:ai_mood_tracking_application/commons/profile_button_row.dart';
 import 'package:ai_mood_tracking_application/commons/profile_data_row.dart';
+import 'package:ai_mood_tracking_application/commons/profile_picture.dart';
 import 'package:ai_mood_tracking_application/commons/profile_picture_clipper.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/services/storage_service.dart';
-import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_password/profile_change_password_view.dart';
-import 'package:ai_mood_tracking_application/ui/counsellor/profile/profile_change_username/profile_change_username_view.dart';
+import 'package:ai_mood_tracking_application/ui/profile/profile_change_password/profile_change_password_view.dart';
+import 'package:ai_mood_tracking_application/ui/profile/profile_change_username/profile_change_username_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,30 +75,19 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
 
   Widget profilePictureContainer(
       Map<String, dynamic> userData, VoidCallback onTap) {
-    Image image = Image.asset(
-      'assets/account_circle.png',
-      width: 150.0,
-      height: 150.0,
-    );
-    if (userData["profilePicture"] != "" &&
-        userData.containsKey("profilePicture")) {
-      image = Image.network(
-        userData["profilePicture"],
-        width: 150.0,
-        height: 150.0,
-      );
-    }
-
     return Column(
       children: [
         Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: ClipOval(
-                clipper: ProfilePictureClipper(),
+                clipper: ProfilePictureClipper(150),
                 child: Material(
                     color: Colors
                         .transparent, // Use transparent color for Material
-                    child: InkWell(onTap: onTap, child: image)))),
+                    child: InkWell(
+                        onTap: onTap,
+                        child:
+                            ProfilePicture(userData: userData, size: 150))))),
         ProfileButton(title: "Change Profile Picture", onTap: onTap),
       ],
     );
@@ -159,8 +149,7 @@ class _MyCounsellorProfileState extends State<CounsellorProfile> {
                 await _auth.getCounsellorUsername(userData["counselorCode"]);
             Share.share(
                 "Download MoodTrack now at:\nhttps://github.com/Marcusng01/MoodTrack_FYP\n\nFor Students:\nRegister using counselor code ${userData["counselorCode"]} to begin your healing journey with $username\n\nFor Counselors:\nRegister your account, then share your counselor code with your students.");
-          } //TODO
-          )
+          })
     ]));
   }
 

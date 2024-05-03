@@ -1,6 +1,7 @@
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
 import 'package:ai_mood_tracking_application/styles/text_styles.dart';
+import 'package:ai_mood_tracking_application/ui/profile/profile_home/student_profile.dart';
 import 'package:ai_mood_tracking_application/ui/student/analyse/analyse_view.dart';
 import 'package:ai_mood_tracking_application/ui/student/message%20(OLD)/message_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -136,15 +137,15 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
             return const Text("Loading...");
           }
           var counselorDoc = snapshot.data!.docs.toList()[0];
-          var counselorData = counselorDoc.data();
+          Map<String, dynamic> counselorData = counselorDoc.data();
           return ElevatedButton(
             onPressed: () => {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => MessageView(
-                          receiverUsername: counselorData["username"],
-                          receiverUserId: counselorData["id"])))
+                            receiverData: counselorData,
+                          )))
             },
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -160,11 +161,38 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
         });
   }
 
+  Widget hamburgerButton(userData) {
+    return StreamBuilder(
+        stream: _auth.streamSearchCounsellorDoc(userData["counselorCode"]),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error${snapshot.error}');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading...");
+          }
+          var counselorDoc = snapshot.data!.docs.toList()[0];
+          var counselorData = counselorDoc.data();
+          return IconButton(
+            icon: const Icon(Icons.menu), // Hamburger icon
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StudentProfile(
+                          counsellorUsername: counselorData["username"],
+                          counsellorUserId: counselorData["id"])));
+            },
+          );
+        });
+  }
+
   Widget studentDashboardScreen(userData) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Welcome ${userData["username"]}"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        actions: <Widget>[hamburgerButton(userData)],
       ),
       body: Padding(
         padding: const EdgeInsets.all(60),

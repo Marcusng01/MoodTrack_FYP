@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ProfilePictureClipper extends CustomClipper<Rect> {
+  late double size;
+
+  ProfilePictureClipper(this.size);
+
   @override
   Rect getClip(Size size) {
-    return const Rect.fromLTWH(0, 0, 150, 150);
+    return Rect.fromLTWH(0, 0, this.size, this.size);
   }
 
   @override

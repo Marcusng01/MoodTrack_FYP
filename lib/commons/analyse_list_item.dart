@@ -1,3 +1,4 @@
+import 'package:ai_mood_tracking_application/commons/profile_picture.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
 import 'package:ai_mood_tracking_application/styles/text_styles.dart';
@@ -51,7 +52,7 @@ class AnalyseListItem extends StatelessWidget {
               },
               child: Card(
                 child: ListTile(
-                  leading: const Icon(Icons.person),
+                  leading: ProfilePicture(userData: studentData, size: 50),
                   title: analyseListItemTitle(username, lastJournalData),
                   subtitle: analyseListItemSubtitle(username, lastJournalData),
                 ),

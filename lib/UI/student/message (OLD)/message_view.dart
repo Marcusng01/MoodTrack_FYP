@@ -1,16 +1,15 @@
 import 'package:ai_mood_tracking_application/commons/chat_bubble.dart';
+import 'package:ai_mood_tracking_application/commons/profile_picture.dart';
 import 'package:ai_mood_tracking_application/commons/text_field.dart';
 import 'package:ai_mood_tracking_application/ui/student/message%20(OLD)/message_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MessageView extends StatefulWidget {
-  final String receiverUsername;
-  final String receiverUserId;
+  final Map<String, dynamic> receiverData;
   const MessageView({
     super.key,
-    required this.receiverUsername,
-    required this.receiverUserId,
+    required this.receiverData,
   });
   @override
   State<MessageView> createState() => _MyMessageViewState();
@@ -23,10 +22,16 @@ class _MyMessageViewState extends State<MessageView> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _controller.messageService.setMultipleMessageAsRead(
-            _controller.getCurrentUserId(), widget.receiverUserId),
+            _controller.getCurrentUserId(), widget.receiverData["username"]),
         builder: (context, snapshot) {
           return Scaffold(
-            appBar: AppBar(title: Text(widget.receiverUsername)),
+            appBar: AppBar(
+              title: Row(children: [
+                ProfilePicture(userData: widget.receiverData, size: 30),
+                const SizedBox(width: 10),
+                Text(widget.receiverData["username"]),
+              ]),
+            ),
             body: Column(
               children: [
                 Expanded(
@@ -41,8 +46,8 @@ class _MyMessageViewState extends State<MessageView> {
 
   Widget _buildMessageList() {
     return StreamBuilder(
-        stream: _controller.messageService
-            .getMessages(widget.receiverUserId, _controller.getCurrentUserId()),
+        stream: _controller.messageService.getMessages(
+            widget.receiverData["id"], _controller.getCurrentUserId()),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error${snapshot.error}');
@@ -91,7 +96,7 @@ class _MyMessageViewState extends State<MessageView> {
       ),
       IconButton(
           onPressed: () {
-            _controller.sendMessage(widget.receiverUserId);
+            _controller.sendMessage(widget.receiverData["id"]);
           },
           icon: const Icon(
             Icons.arrow_upward,
