@@ -96,7 +96,8 @@ class _MyMessageViewState extends State<MessageView> {
       ),
       IconButton(
           onPressed: () {
-            _controller.sendMessage(widget.receiverData["id"]);
+            // _controller.sendMessage(widget.receiverData["id"]);
+            _controller.sendMessageWithNotification(widget.receiverData["id"]);
           },
           icon: const Icon(
             Icons.arrow_upward,

@@ -198,6 +198,11 @@ class FirestoreService {
     final DocumentReference userDetails = getUserDetailsReference();
     userDetails.update({'profilePicture': imageUrl});
   }
+
+  void updateFCMToken(String fcmToken) {
+    final DocumentReference userDetails = getUserDetailsReference();
+    userDetails.update({'fcmToken': fcmToken});
+  }
 }
 
 fetchdata(String url) async {
