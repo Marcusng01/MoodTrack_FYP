@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "pixel_4",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5554"
+        },
+        {
+            "name": "pixel_6",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5556"
+        },
+        {
             "name": "ai_mood_tracking_application",
             "request": "launch",
             "type": "dart"
@@ -20,6 +32,12 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "pixel_4_and_6",
+            "configurations": ["pixel_4","pixel_6"]
         }
     ]
 }

@@ -162,11 +162,11 @@ class _MyWritingScreenState extends State<JournalWritingView> {
                 },
               );
 
-              await controller.fireStoreService.storeJournal(
-                  controller.journalInputController,
-                  controller.date,
-                  controller.selectedRating);
-
+              List<String> moods = await controller.firestoreService
+                  .storeJournal(controller.journalInputController,
+                      controller.date, controller.selectedRating);
+              controller.sendJournalNotification(moods, widget.user!.uid,
+                  await controller.auth.getCurrentCounsellorId());
               Navigator.of(context).pop(); // Close the dialog
 
               Navigator.pushNamedAndRemoveUntil(
@@ -187,7 +187,7 @@ class _MyWritingScreenState extends State<JournalWritingView> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: controller.fireStoreService.getJournalByDate(controller.date),
+        future: controller.firestoreService.getJournalByDate(controller.date),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return writingScreen(context);

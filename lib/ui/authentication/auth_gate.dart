@@ -1,5 +1,6 @@
 import 'package:ai_mood_tracking_application/UI/counsellor/counsellor_dashboard.dart';
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
+import 'package:ai_mood_tracking_application/services/notification_service.dart';
 import 'package:ai_mood_tracking_application/ui/authentication/login/login_view.dart';
 import 'package:ai_mood_tracking_application/ui/student/dashboard/student_dashboard.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class AuthGate extends StatefulWidget {
 class _AuthGateState extends State<AuthGate> {
   late Map<String, dynamic> userData;
   final AuthService _auth = AuthService();
+  final NotificationService _notificationService = NotificationService();
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class _AuthGateState extends State<AuthGate> {
       stream: _auth.authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          _notificationService.getAndStoreFCMToken();
           // String jsonString = jsonEncode(Auth().currentUser?.uid);
           return FutureBuilder(
               future: _auth.getUserDetails(),

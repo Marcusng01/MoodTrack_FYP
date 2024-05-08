@@ -63,7 +63,8 @@ class NotificationService {
     return token!;
   }
 
-  Future<void> sendNotification(String fcmToken, String messageContent) async {
+  Future<void> sendNotification(
+      String fcmToken, String title, String messageContent) async {
     // Replace 'YOUR_SERVER_KEY' with your Firebase server key
     String serverKey = await getAccessToken();
     String fcmEndpoint =
@@ -72,7 +73,7 @@ class NotificationService {
       "message": {
         'token': fcmToken,
         'notification': {
-          'title': 'Notification',
+          'title': title,
           'body': messageContent,
         },
         'data': {

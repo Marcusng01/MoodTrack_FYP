@@ -141,6 +141,18 @@ class AuthService {
     return querySnapshot.docs.first.get('username') as String;
   }
 
+  Future<String> getCurrentCounsellorId() async {
+    var doc = await getUserDetails();
+    var data = doc.data()! as Map<String, dynamic>;
+    var counsellorCode = data["counsellorCode"];
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firebaseFirestore
+        .collection('/users')
+        .where('counselorCode', isEqualTo: counsellorCode)
+        .where('isCounsellor', isEqualTo: true)
+        .limit(1)
+        .get();
+    return querySnapshot.docs.first.get('id') as String;
+  }
   // Stream<QuerySnapshot> streamCurrentUserCounsellorDoc() async {
   //   var snapshot = streamUserDetails();
   //   snapshot.first.

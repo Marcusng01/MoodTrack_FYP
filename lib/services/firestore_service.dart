@@ -66,8 +66,10 @@ class FirestoreService {
   }
 
   //Submit Document
-  Future<void> storeJournal(TextEditingController journalInputController,
-      DateTime date, String rating) async {
+  Future<List<String>> storeJournal(
+      TextEditingController journalInputController,
+      DateTime date,
+      String rating) async {
     String dateString = date.toString();
     List<String> sentences =
         journalInputController.text.split(RegExp(r'(?<=[.!?])\s+'));
@@ -106,6 +108,7 @@ class FirestoreService {
         msg: "Journal Could Not Be Submitted",
       );
     }
+    return moods;
   }
 
   // Retrieve Journal
@@ -202,6 +205,54 @@ class FirestoreService {
   void updateFCMToken(String fcmToken) {
     final DocumentReference userDetails = getUserDetailsReference();
     userDetails.update({'fcmToken': fcmToken});
+  }
+
+  Future<String> getUsername(String uid) async {
+    return await _firebaseFirestore
+        .collection('users')
+        .doc(uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        // Check if the document exists
+        // Access the field by its name
+        return documentSnapshot.get('username');
+      } else {
+        return "";
+      }
+    });
+  }
+
+  Future<String> getUserFCMToken(String uid) async {
+    return await _firebaseFirestore
+        .collection('users')
+        .doc(uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        // Check if the document exists
+        // Access the field by its name
+        return documentSnapshot.get('fcmToken');
+      } else {
+        return "";
+      }
+    });
+  }
+
+  Future<String> getUserProfilePicture(String uid) async {
+    return await _firebaseFirestore
+        .collection('users')
+        .doc(uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        // Check if the document exists
+        // Access the field by its name
+        return documentSnapshot.get('profilePicture');
+      } else {
+        return "";
+      }
+    });
   }
 }
 
