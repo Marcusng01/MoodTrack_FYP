@@ -15,10 +15,35 @@ class JournalWritingController {
   bool modifyPlaceholder = true;
   final NotificationService notificationService = NotificationService();
 
+  String generateFeelingSentence(List<String> moods) {
+    // Remove duplicates from the list
+    Set<String> uniqueMoods = moods.toSet();
+
+    // If "neutral" is present along with other moods, remove it
+    if (uniqueMoods.contains("neutral") && uniqueMoods.length > 1) {
+      uniqueMoods.remove("neutral");
+    }
+
+    // Create the string
+    String result = "felt ";
+    result += uniqueMoods.join(', '); // Joining unique moods with commas
+
+    // If there are more than one unique mood, add "and" before the last mood
+    if (uniqueMoods.length > 1) {
+      result = result.replaceRange(
+        result.lastIndexOf(','),
+        result.lastIndexOf(',') + 1,
+        ' and',
+      );
+    }
+
+    return result;
+  }
+
   void sendJournalNotification(
       List<String> moods, String senderUserId, String receiverUserId) async {
     if (moods.isNotEmpty) {
-      String message = moods.toString();
+      String message = generateFeelingSentence(moods);
       String token = await firestoreService.getUserFCMToken(receiverUserId);
       String username = await firestoreService.getUsername(senderUserId);
       // String imageUrl =
