@@ -1,7 +1,6 @@
 import 'package:ai_mood_tracking_application/services/auth_service.dart';
 import 'package:ai_mood_tracking_application/services/firestore_service.dart';
 import 'package:ai_mood_tracking_application/styles/color_styles.dart';
-import 'package:ai_mood_tracking_application/ui/student/journaling/journal_calendar/journal_calendar_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,36 +26,11 @@ class AnalyseView extends StatefulWidget {
 }
 
 class _MyAnalyseViewState extends State<AnalyseView> {
-  JournalCalendarController controller = JournalCalendarController();
   final FirestoreService _firestoreService = FirestoreService();
   late String chartTitle = "";
-  DateRangePickerController _datePickerController = DateRangePickerController();
+  final DateRangePickerController _datePickerController =
+      DateRangePickerController();
   DateTime now = DateTime.now();
-  DateRangePickerView view = DateRangePickerView.month;
-
-  final List<String> monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
-
-  String getMonthName(int monthNumber) {
-    // Adjust for 0-based indexing
-    if (monthNumber < 1 || monthNumber > 12) {
-      throw ArgumentError('Month number must be between 1 and 12');
-    }
-
-    return monthNames[monthNumber - 1];
-  }
 
   @override
   void initState() {
@@ -69,20 +43,7 @@ class _MyAnalyseViewState extends State<AnalyseView> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Map<DateTime, String>>(
-        stream: controller.fireStoreService
-            .getDateTimeRatingMapAsStream(widget.userId),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.connectionState == ConnectionState.active &&
-              snapshot.hasData) {
-            controller.events = snapshot.data!;
-            return analyseScreen();
-          } else {
-            return analyseScreen(); // Show a loading spinner while waiting for the data
-          }
-        });
+    return analyseScreen();
   }
 
   Widget analyseScreen() {
@@ -113,7 +74,6 @@ class _MyAnalyseViewState extends State<AnalyseView> {
     return SfDateRangePicker(
       view: DateRangePickerView.month,
       initialSelectedRange: _datePickerController.selectedRange,
-      controller: _datePickerController,
       selectionMode: DateRangePickerSelectionMode.range,
       showActionButtons: true,
       onSubmit: (Object? value) {
@@ -122,101 +82,13 @@ class _MyAnalyseViewState extends State<AnalyseView> {
       onCancel: () {
         setState(() {
           _datePickerController.selectedRange = PickerDateRange(
-            DateTime(now.year, now.month, 1),
-            DateTime(now.year, now.month + 1, 1)
-                .subtract(const Duration(days: 1)),
-          );
-          _datePickerController.view = DateRangePickerView.month;
-          _datePickerController.displayDate = DateTime(now.year, now.month, 1);
+              DateTime(now.year, now.month, 1),
+              DateTime(now.year, now.month + 1, 1)
+                  .subtract(const Duration(days: 1)));
           chartTitle = '';
         });
       },
-      cellBuilder:
-          (BuildContext buildContext, DateRangePickerCellDetails cellDetails) {
-        if (_datePickerController.view == DateRangePickerView.century) {
-          final int yearValue = (cellDetails.date.year ~/ 10) * 10;
-          return Container(
-            width: cellDetails.bounds.width,
-            height: cellDetails.bounds.height,
-            alignment: Alignment.center,
-            child: Text('$yearValue - ${yearValue + 9}'),
-          );
-        } else if (_datePickerController.view == DateRangePickerView.year) {
-          return Container(
-            width: cellDetails.bounds.width,
-            height: cellDetails.bounds.height,
-            alignment: Alignment.center,
-            child: Text(getMonthName(cellDetails.date.month)),
-          );
-        } else if (_datePickerController.view == DateRangePickerView.decade) {
-          return Container(
-            width: cellDetails.bounds.width,
-            height: cellDetails.bounds.height,
-            alignment: Alignment.center,
-            child: Text(cellDetails.date.year.toString()),
-          );
-        } else {
-          return _dayBuilder(
-            date: cellDetails.date,
-            decoration: null,
-            isDisabled: null,
-            isSelected: _isDateSelected(cellDetails.date),
-            isToday: cellDetails.date == DateTime.now(),
-            textStyle: null,
-          );
-        }
-      },
     );
-  }
-
-  Widget _dayBuilder({
-    required DateTime date,
-    BoxDecoration? decoration,
-    bool? isDisabled,
-    bool? isSelected,
-    bool? isToday,
-    TextStyle? textStyle,
-  }) {
-    Widget dayWidget = Center(
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: [
-          Text(
-            MaterialLocalizations.of(context).formatDecimal(date.day),
-            style: controller.dateTextStyle(date),
-          ),
-          // Add other customizations as needed
-        ],
-      ),
-    );
-    if (controller.events.containsKey(date)) {
-      Color color = controller.dateColor(date);
-      dayWidget = Container(
-        color: isSelected == true ? color : color.withOpacity(0.6),
-        child: Center(
-          child: Stack(
-            alignment: AlignmentDirectional.center,
-            children: [
-              Text(
-                MaterialLocalizations.of(context).formatDecimal(date.day),
-                style: controller.dateTextStyle(date),
-              ),
-              // Add other customizations as needed
-            ],
-          ),
-        ),
-      );
-    }
-    return dayWidget;
-  }
-
-  bool _isDateSelected(DateTime date) {
-    // Implement logic to check if the date is selected
-    // For example:
-    return _datePickerController.selectedRange?.startDate != null &&
-        date.isAfter(_datePickerController.selectedRange!.startDate!) &&
-        date.isBefore(_datePickerController.selectedRange!.endDate ??
-            _datePickerController.selectedRange!.startDate!);
   }
 
   void _setDateRange(dynamic value) {

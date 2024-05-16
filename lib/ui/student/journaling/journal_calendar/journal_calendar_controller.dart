@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class JournalCalendarController {
   DateTime selectedDay =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  ValueNotifier<DateTime> reflectButtonNofitier = ValueNotifier<DateTime>(
+  ValueNotifier<DateTime> buttonNofitier = ValueNotifier<DateTime>(
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
   Map<DateTime, String> events = {};
   FirestoreService fireStoreService = FirestoreService();

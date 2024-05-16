@@ -67,8 +67,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child:
-            Column(children: <Widget>[searchBar(), const Text("Loading...")]),
+        child: Column(children: <Widget>[const Text("Loading...")]),
       ),
       bottomNavigationBar: counsellorBottomNavBar(),
     );
@@ -94,7 +93,7 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(children: <Widget>[searchBar(), listBody(userData)]),
+        child: Column(children: <Widget>[listBody(userData)]),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -106,36 +105,36 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
     );
   }
 
-  Widget searchBar() {
-    return SearchAnchor(
-        builder: (BuildContext context, SearchController controller) {
-      return SearchBar(
-        hintText: "Search",
-        controller: controller,
-        padding: const MaterialStatePropertyAll<EdgeInsets>(
-            EdgeInsets.symmetric(horizontal: 16.0)),
-        onTap: () {
-          controller.openView();
-        },
-        onChanged: (_) {
-          controller.openView();
-        },
-        leading: const Icon(Icons.search),
-      );
-    }, suggestionsBuilder: (BuildContext context, SearchController controller) {
-      return List<ListTile>.generate(5, (int index) {
-        final String item = 'item $index';
-        return ListTile(
-          title: Text(item),
-          onTap: () {
-            setState(() {
-              controller.closeView(item);
-            });
-          },
-        );
-      });
-    });
-  }
+  // Widget searchBar() {
+  //   return SearchAnchor(
+  //       builder: (BuildContext context, SearchController controller) {
+  //     return SearchBar(
+  //       hintText: "Search",
+  //       controller: controller,
+  //       padding: const MaterialStatePropertyAll<EdgeInsets>(
+  //           EdgeInsets.symmetric(horizontal: 16.0)),
+  //       onTap: () {
+  //         controller.openView();
+  //       },
+  //       onChanged: (_) {
+  //         controller.openView();
+  //       },
+  //       leading: const Icon(Icons.search),
+  //     );
+  //   }, suggestionsBuilder: (BuildContext context, SearchController controller) {
+  //     return List<ListTile>.generate(5, (int index) {
+  //       final String item = 'item $index';
+  //       return ListTile(
+  //         title: Text(item),
+  //         onTap: () {
+  //           setState(() {
+  //             controller.closeView(item);
+  //           });
+  //         },
+  //       );
+  //     });
+  //   });
+  // }
 
   Widget listBody(Map<String, dynamic> counselorData) {
     return StreamBuilder(

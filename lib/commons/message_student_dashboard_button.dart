@@ -1,26 +1,26 @@
-import 'package:ai_mood_tracking_application/commons/chat_trailing_icon.dart';
-import 'package:ai_mood_tracking_application/commons/profile_picture.dart';
 import 'package:ai_mood_tracking_application/services/message_service.dart';
+import 'package:ai_mood_tracking_application/styles/color_styles.dart';
 import 'package:ai_mood_tracking_application/styles/text_styles.dart';
 import 'package:ai_mood_tracking_application/ui/student/message%20(OLD)/message_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class MessageListItem extends StatelessWidget {
+class MessageStudentDashboardButton extends StatelessWidget {
   final Map<String, dynamic> counselorData;
   final Map<String, dynamic> studentData;
   final MessageService messageService;
-  const MessageListItem({
+  final IconData icon;
+  const MessageStudentDashboardButton({
     super.key,
     required this.counselorData,
     required this.studentData,
     required this.messageService,
+    required this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    String username = studentData['username'];
     return StreamBuilder(
         stream: messageService.getLatestMessage(
             counselorData["id"], studentData["id"]),
@@ -29,10 +29,10 @@ class MessageListItem extends StatelessWidget {
             return Text('Error${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Card(
-              child: ListTile(
-                leading: Icon(Icons.person),
-                title: Text("Loading...",
+            return Card(
+              child: ElevatedButton(
+                onPressed: () => {},
+                child: const Text("Loading...",
                     style: AppTextStyles.mediumGreyText,
                     overflow: TextOverflow.ellipsis),
               ),
@@ -43,23 +43,63 @@ class MessageListItem extends StatelessWidget {
               snapshot.data!.docs.isNotEmpty
                   ? snapshot.data!.docs.first.data()
                   : {};
-          return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            MessageView(receiverData: studentData)));
-              },
-              child: Card(
-                child: ListTile(
-                  leading: ProfilePicture(userData: studentData, size: 50),
-                  title: messageListItemTitle(username, latestMessageData),
-                  subtitle: messageListItemSubtitle(
-                      counselorData, studentData, latestMessageData),
-                ),
-              ));
+          return ElevatedButton(
+            onPressed: () => {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MessageView(
+                            receiverData: counselorData,
+                          )))
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  dashboadButtonText(
+                      "Message Counsellor",
+                      messageListItemSubtitle(
+                          counselorData, studentData, latestMessageData),
+                      messageTimestampToString(latestMessageData["timestamp"])),
+                  dashboardButtonIcon(icon)
+                ],
+              ),
+            ),
+          );
         });
+  }
+
+  Widget dashboardButtonIcon(icon) {
+    return Icon(
+      icon,
+      color: AppColors.blueSurface,
+      size: 45,
+    );
+  }
+
+  Widget dashboadButtonText(head, body, foot) {
+    return SizedBox(
+      width: 150,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(head,
+              style: AppTextStyles.largeBlueText,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis),
+          Text(body,
+              style: AppTextStyles.mediumBlackText,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis),
+          Text(foot,
+              style: AppTextStyles.mediumGreyText,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis),
+        ],
+      ),
+    );
   }
 
   Widget messageListItemTitle(
@@ -109,33 +149,18 @@ class MessageListItem extends StatelessWidget {
     }
   }
 
-  Widget messageListItemSubtitle(
+  String messageListItemSubtitle(
       Map<String, dynamic> counselorData,
       Map<String, dynamic> studentData,
       Map<String, dynamic> latestMessageData) {
     if (latestMessageData.isEmpty) {
-      return const Text("No Messages.",
-          style: AppTextStyles.mediumGreyText, overflow: TextOverflow.ellipsis);
+      return "No Messages.";
     } else {
       bool isSender = latestMessageData["senderId"] == counselorData["id"];
       String message = isSender
           ? "You: ${latestMessageData['message']}"
           : latestMessageData['message'];
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Text(
-              message,
-              style: AppTextStyles.mediumGreyText,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          ChatTrailingIcon(
-              unread: latestMessageData["unread"], isSender: isSender),
-        ],
-      );
+      return message;
     }
   }
 }

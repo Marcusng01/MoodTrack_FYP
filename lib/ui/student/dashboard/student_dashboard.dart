@@ -74,12 +74,11 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        dashboardButton("Journaling", "You were 'Angry'", "Yesterday",
+        dashboardButton("Journaling", "Write How You Feel", "Journal Now",
             Icons.calendar_month),
-        dashboardButton(
-            "Reminders", "Breath in and out", "See More", Icons.list),
-        messageButton(userData, "Message Counsellor", "You: Last Message",
-            "Today 3:14pm", Icons.mail),
+        dashboardButton("Reminders", "Your Reminders", "See More", Icons.list),
+        messageButton(
+            userData, "Message Counsellor", "Message Now", Icons.mail),
         analyseButton(userData, "Analyse", "Generate Reports", "Click Here",
             Icons.pie_chart)
       ],
@@ -126,7 +125,7 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
     return doc.data as Map<String, dynamic>;
   }
 
-  Widget messageButton(userData, head, body, foot, icon) {
+  Widget messageButton(userData, head, foot, icon) {
     return StreamBuilder(
         stream: _auth.streamSearchCounsellorDoc(userData["counselorCode"]),
         builder: (context, snapshot) {
@@ -152,7 +151,7 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  dashboadButtonText(head, body, foot),
+                  dashboadButtonText(head, counselorData["username"], foot),
                   dashboardButtonIcon(icon)
                 ],
               ),

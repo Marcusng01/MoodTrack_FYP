@@ -175,8 +175,17 @@ class FirestoreService {
         .snapshots();
   }
 
-  Stream<Map<DateTime, String>> getDateTimeRatingMapAsStream() {
-    return getJournalsStream().map((querySnapshot) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserJournalsStream(
+      String uid) {
+    return _firebaseFirestore
+        .collection('users')
+        .doc(uid)
+        .collection('journals')
+        .snapshots();
+  }
+
+  Stream<Map<DateTime, String>> getDateTimeRatingMapAsStream(String uid) {
+    return getUserJournalsStream(uid).map((querySnapshot) {
       Map<DateTime, String> dateTimeRatingMap = {};
       for (var doc in querySnapshot.docs) {
         DateTime date = doc['date'].toDate();

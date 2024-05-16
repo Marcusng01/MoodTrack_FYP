@@ -65,7 +65,7 @@ class _MyStudentJournalingScreenState extends State<JournalCalendarView> {
       value: [controller.selectedDay],
       onValueChanged: (date) => {
         controller.selectedDay = date.first!,
-        controller.reflectButtonNofitier.value = controller.selectedDay
+        controller.buttonNofitier.value = controller.selectedDay
       },
       config: CalendarDatePicker2Config(
         // Other configurations...
@@ -76,56 +76,95 @@ class _MyStudentJournalingScreenState extends State<JournalCalendarView> {
   }
 
   Widget reflectButton() {
+    DateTime today =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime selectedDay = controller.selectedDay;
+    bool isFabEnabled =
+        selectedDay.isBefore(today) || selectedDay.isAtSameMomentAs(today);
+    if (isFabEnabled) {
+      return ValueListenableBuilder(
+          valueListenable: controller.buttonNofitier,
+          builder: (context, value, _) {
+            return ElevatedButton(
+              onPressed: controller.events[value] == null
+                  ? null
+                  : () => controller.navigateToReflect(context),
+              child: controller.events[value] == null
+                  ? const Text("Please write a Journal first")
+                  : const Text("Reflect"),
+            );
+          });
+    } else {
+      return ValueListenableBuilder(
+          valueListenable: controller.buttonNofitier,
+          builder: (context, value, _) {
+            return ElevatedButton(
+                onPressed: controller.events[value] == null
+                    ? null
+                    : () => controller.navigateToReflect(context),
+                child: const Text("This date is in the future."));
+          });
+    }
+  }
+
+  Widget studentJournalingScreen() {
     return ValueListenableBuilder(
-        valueListenable: controller.reflectButtonNofitier,
+        valueListenable: controller.buttonNofitier,
         builder: (context, value, _) {
-          return ElevatedButton(
-            onPressed: controller.events[value] == null
-                ? null
-                : () => controller.navigateToReflect(context),
-            child: controller.events[value] == null
-                ? const Text("Please write a Journal first")
-                : const Text("Reflect"),
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              title: Text(widget.title),
+            ),
+            body: Center(
+              child: Column(
+                children: <Widget>[calendar(), reflectButton()],
+              ),
+            ),
+            floatingActionButton: journalFab(),
           );
         });
   }
 
-  Widget studentJournalingScreen() {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[calendar(), reflectButton()],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (controller.events[controller.selectedDay] == null) {
-            Navigator.pushNamed(context, "/Student/Journaling/Writing",
-                arguments: {
-                  "date": controller.selectedDay,
-                  "rating": controller.events[controller.selectedDay]
-                });
-          } else {
-            Navigator.pushNamed(context, "/Student/Journaling/Result",
-                arguments: {
-                  "date": controller.selectedDay,
-                  "rating": controller.events[controller.selectedDay]
-                });
-          }
-        },
-        label: const Text("Journal"),
-      ),
-    );
+  FloatingActionButton? journalFab() {
+    DateTime today =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime selectedDay = controller.selectedDay;
+    bool isFabEnabled =
+        selectedDay.isBefore(today) || selectedDay.isAtSameMomentAs(today);
+    return isFabEnabled
+        ? FloatingActionButton.extended(
+            onPressed: () {
+              if (controller.events[controller.selectedDay] == null) {
+                Navigator.pushNamed(
+                  context,
+                  "/Student/Journaling/Writing",
+                  arguments: {
+                    "date": controller.selectedDay,
+                    "rating": controller.events[controller.selectedDay],
+                  },
+                );
+              } else {
+                Navigator.pushNamed(
+                  context,
+                  "/Student/Journaling/Result",
+                  arguments: {
+                    "date": controller.selectedDay,
+                    "rating": controller.events[controller.selectedDay],
+                  },
+                );
+              }
+            },
+            label: const Text("Journal"),
+          )
+        : null;
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Map<DateTime, String>>(
-        stream: controller.fireStoreService.getDateTimeRatingMapAsStream(),
+        stream: controller.fireStoreService
+            .getDateTimeRatingMapAsStream(widget.user!.uid),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
