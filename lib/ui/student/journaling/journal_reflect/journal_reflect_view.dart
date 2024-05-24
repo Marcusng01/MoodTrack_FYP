@@ -112,8 +112,39 @@ class _MyJournalReflectViewState extends State<JournalReflectView> {
       child: ListTile(
         trailing: IconButton(
           icon: const Icon(Icons.delete),
-          onPressed: () => controller.firestoreService
-              .deleteReflection(controller.date, reflection),
+          onPressed: () async {
+            bool? confirmDelete = await showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Confirm Deletion'),
+                  content: const Text(
+                      'Are you sure you want to delete this reflection?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop(false); // User cancelled the action
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop(true); // User confirmed the deletion
+                      },
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                );
+              },
+            );
+
+            if (confirmDelete == true) {
+              controller.firestoreService
+                  .deleteReflection(controller.date, reflection);
+            }
+          },
         ),
         title: Text(reflection,
             style: AppTextStyles.mediumBlackText,

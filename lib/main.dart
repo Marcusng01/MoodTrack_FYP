@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         "/Student/Journaling/Writing": (context) => JournalWritingView(),
         "/Student/Journaling/Result": (context) => JournalResultView(),
         "/Student/Reminders": (context) =>
-            RemindersView(title: "Reminders of Past Reflections"),
+            RemindersView(title: "All Reflections"),
       },
       // onGenerateRoute: (settings) {
       //   if (settings.name == '/Student/Journaling/Writing') {

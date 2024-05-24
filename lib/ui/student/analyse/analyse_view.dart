@@ -101,11 +101,6 @@ class _MyAnalyseViewState extends State<AnalyseView> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        // onPressed: () => _selectDate(context),
-        onPressed: () {},
-        label: const Text('Select Month'),
-      ),
     );
   }
 

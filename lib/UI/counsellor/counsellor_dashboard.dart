@@ -65,9 +65,9 @@ class _MyCounsellorDashboardState extends State<CounsellorDashboard> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(children: <Widget>[const Text("Loading...")]),
+      body: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(children: <Widget>[Text("Loading...")]),
       ),
       bottomNavigationBar: counsellorBottomNavBar(),
     );

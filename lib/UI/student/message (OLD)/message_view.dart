@@ -22,7 +22,7 @@ class _MyMessageViewState extends State<MessageView> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _controller.messageService.setMultipleMessageAsRead(
-            _controller.getCurrentUserId(), widget.receiverData["username"]),
+            _controller.getCurrentUserId(), widget.receiverData["id"]),
         builder: (context, snapshot) {
           return Scaffold(
             appBar: AppBar(

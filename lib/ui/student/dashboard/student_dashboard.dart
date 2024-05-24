@@ -76,7 +76,8 @@ class _MyStudentDashboardState extends State<StudentDashboard> {
       children: <Widget>[
         dashboardButton("Journaling", "Write How You Feel", "Journal Now",
             Icons.calendar_month),
-        dashboardButton("Reminders", "Your Reminders", "See More", Icons.list),
+        dashboardButton(
+            "Reminders", "Your Reflections", "See More", Icons.list),
         messageButton(
             userData, "Message Counsellor", "Message Now", Icons.mail),
         analyseButton(userData, "Analyse", "Generate Reports", "Click Here",
